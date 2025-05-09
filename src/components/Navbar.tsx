@@ -1,7 +1,16 @@
 
-import { Bell, Search, Settings } from "lucide-react";
+import { Bell, Search, Settings, FileText, User, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   return (
@@ -16,7 +25,7 @@ const Navbar = () => {
           <h1 className="text-xl font-bold text-gray-800">MedFlow<span className="text-medflow-purple">AI</span></h1>
         </div>
       </div>
-      
+
       <div className="flex-1 mx-12">
         <div className="relative max-w-md mx-auto">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -26,7 +35,7 @@ const Navbar = () => {
           />
         </div>
       </div>
-      
+
       <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" className="relative">
           <Bell className="h-4 w-4" />

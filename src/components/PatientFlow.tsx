@@ -6,7 +6,8 @@ import { useHospitalData } from "@/contexts/HospitalDataContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, PlusCircle } from "lucide-react";
+import { AddPatientForm } from "@/components/AddPatientForm";
 
 const PatientFlow = ({ fullView = false }: { fullView?: boolean }) => {
   const { patients, routeRecommendations } = useHospitalData();
@@ -17,7 +18,7 @@ const PatientFlow = ({ fullView = false }: { fullView?: boolean }) => {
   // Filter patients based on search query
   const filteredPatients = patients.filter(patient => {
     if (!searchQuery) return true;
-    
+
     const query = searchQuery.toLowerCase();
     return (
       patient.id.toLowerCase().includes(query) ||
@@ -27,22 +28,22 @@ const PatientFlow = ({ fullView = false }: { fullView?: boolean }) => {
       patient.urgency.toLowerCase().includes(query)
     );
   });
-  
+
   // Sort patients based on sort field and direction
   const sortedPatients = [...filteredPatients].sort((a, b) => {
     if (!sortField) return 0;
-    
+
     let fieldA = a[sortField];
     let fieldB = b[sortField];
-    
+
     if (typeof fieldA === 'string') fieldA = fieldA.toLowerCase();
     if (typeof fieldB === 'string') fieldB = fieldB.toLowerCase();
-    
+
     if (fieldA < fieldB) return sortDirection === 'asc' ? -1 : 1;
     if (fieldA > fieldB) return sortDirection === 'asc' ? 1 : -1;
     return 0;
   });
-  
+
   // Handle sort click
   const handleSort = (field: string) => {
     if (sortField === field) {
@@ -52,13 +53,13 @@ const PatientFlow = ({ fullView = false }: { fullView?: boolean }) => {
       setSortDirection('asc');
     }
   };
-  
+
   // Get sort direction indicator
   const getSortIndicator = (field: string) => {
     if (sortField !== field) return null;
     return sortDirection === 'asc' ? ' ↑' : ' ↓';
   };
-  
+
   // Display number of patients to show
   const patientCount = fullView ? sortedPatients.length : Math.min(5, sortedPatients.length);
   const displayPatients = sortedPatients.slice(0, patientCount);
@@ -71,15 +72,23 @@ const PatientFlow = ({ fullView = false }: { fullView?: boolean }) => {
             Patient Flow
             <Badge className="ml-2 bg-medflow-purple hover:bg-medflow-dark-purple">AI Powered</Badge>
           </CardTitle>
-          
+
           {fullView && (
-            <div className="relative w-full sm:w-64 mt-2 sm:mt-0">
-              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Search patients..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+            <div className="flex items-center gap-2 mt-2 sm:mt-0">
+              <div className="relative w-full sm:w-64">
+                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search patients..."
+                  className="pl-9"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <AddPatientForm
+                buttonVariant="default"
+                buttonSize="default"
+                buttonText="Add Patient"
+                className="whitespace-nowrap flex items-center gap-1"
               />
             </div>
           )}
@@ -120,7 +129,7 @@ const PatientFlow = ({ fullView = false }: { fullView?: boolean }) => {
                   const recommendation = routeRecommendations.find(
                     (rec) => rec.patientId === patient.id
                   );
-                  
+
                   return (
                     <TableRow key={patient.id}>
                       <TableCell className="font-medium">{patient.id}</TableCell>
@@ -176,7 +185,7 @@ const PatientFlow = ({ fullView = false }: { fullView?: boolean }) => {
               </TableBody>
             </Table>
           </div>
-          
+
           {!fullView && patients.length > 5 && (
             <div className="flex justify-center">
               <Button variant="outline" size="sm">
@@ -184,7 +193,7 @@ const PatientFlow = ({ fullView = false }: { fullView?: boolean }) => {
               </Button>
             </div>
           )}
-          
+
           {fullView && (
             <div className="flex justify-between items-center text-sm text-muted-foreground">
               <div>
